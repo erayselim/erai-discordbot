@@ -45,8 +45,12 @@ export class AiClient {
         { role: 'user', content: userPrompt }
       ]
     });
-    if (process.env.AI_DEBUG === '1') {
-      console.log('[AI][chat.completions] raw:', JSON.stringify(response));
+    if (process.env.AI_DEBUG === '1' && process.env.NODE_ENV !== 'production') {
+      console.log('[AI][chat.completions]', {
+        id: (response as any)?.id,
+        model: (response as any)?.model,
+        usage: (response as any)?.usage
+      });
     }
     const text = response.choices?.[0]?.message?.content?.trim();
     return text || 'Boş yanıt.';
